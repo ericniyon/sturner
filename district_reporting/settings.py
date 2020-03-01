@@ -10,6 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'yvestutorialsnotifyme@gmail.com'
+EMAIL_HOST_PASSWORD = 'project213@'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -162,15 +170,6 @@ LOGOUT_REDIRECT_URL = 'login'
 # Crispy forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'distrwamagana@gmail.com'
-EMAIL_HOST_PASSWORD = 'irad1423'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
 
 
 MESSAGE_TAGS = {

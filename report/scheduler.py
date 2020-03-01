@@ -39,7 +39,7 @@ next_friday = next_weekday(d, 3)
 # function that get all owners asigned to report with week,and append it to term[] to
 # send them email remainder at the same time
 def all_users_emails_week():
-    weekly = []
+    weekly = ['byives21@gmail.com']
     for email in AllReportType.objects.all():
 
         if email.igihe_itangirwa == 1:
@@ -224,7 +224,8 @@ def start(deadline):
             testing = datetime.datetime.now() 
             print(testing)
             scheduler = BackgroundScheduler()
-            scheduler.add_job(mailweek, 'date', run_date=testing)
+            # scheduler.add_job(mailweek, 'date', run_date=testing)
+            scheduler.add_job(mailweek, 'interval', minutes=1)
             for reports in reports_n:
                 for repo in report_n:
                     if repo.submitted_on > reports.deadline:

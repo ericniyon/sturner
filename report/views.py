@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from .forms import ReportForm
 
-from .models import ReportType
+from .models import AllReportType
 
 
 def generate_report(request):
     report_form = ReportForm(request.POST, request.FILES,request=request)
 
-    report_form.fields['report_type'].queryset = ReportType.objects.filter(owner=1)
+    report_form.fields['report_type'].queryset = AllReportType.objects.filter(owner=1)
 
     if report_form.is_valid():
         report_form.save()

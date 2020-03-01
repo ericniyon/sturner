@@ -13,6 +13,7 @@ from datetime import date
 def trimester_from_now():
 
     term = datetime.date.today() + datetime.timedelta((3 * 365 / 12))
+    
     return term
 
 
@@ -29,13 +30,17 @@ d = datetime.datetime.now()
 next_friday = next_weekday(d, 3)
 
 
+
+
+
+
 # ========================================================== WEEKLY ==================================================
 
 # function that get all owners asigned to report with week,and append it to term[] to
 # send them email remainder at the same time
 def all_users_emails_week():
     weekly = []
-    for email in ReportType.objects.all():
+    for email in AllReportType.objects.all():
 
         if email.igihe_itangirwa == 1:
             weekly.append(email.owner.user.email)
@@ -63,7 +68,7 @@ def mailweek(*args, **kwargs):
 def all_users_emails_monthly():
     month = []
 
-    for email in ReportType.objects.all():
+    for email in AllReportType.objects.all():
 
         if email.igihe_itangirwa == 2:
             month.append(email.owner.user.email)
@@ -89,7 +94,7 @@ def mailmonth(*args, **kwargs):
 def all_users_emails_term():
     term = []
 
-    for email in ReportType.objects.all():
+    for email in AllReportType.objects.all():
 
         if email.igihe_itangirwa == 3:
             term.append(email.owner.user.email)
@@ -111,7 +116,7 @@ def mailterm(*args, **kwargs):
 def all_users_emails_semester():
     semester = []
 
-    for email in ReportType.objects.all():
+    for email in AllReportType.objects.all():
 
         if email.igihe_itangirwa == 4:
             semester.append(email.owner.user.email)
@@ -134,7 +139,7 @@ def mailsemester(*args, **kwargs):
 def all_users_emails_year():
     year = []
 
-    for email in ReportType.objects.all():
+    for email in AllReportType.objects.all():
 
         if email.igihe_itangirwa == 4:
 
@@ -205,10 +210,10 @@ def start(deadline):
     month = all_users_emails_monthly()
     term = all_users_emails_term()
 
-    report_n = Report.objects.all()
+    report_n = Reports.objects.all()
 
-    reports_n = ReportType.objects.all()
-    reports = ReportType.objects.all()
+    reports_n = AllReportType.objects.all()
+    reports = AllReportType.objects.all()
 
 
 
@@ -216,14 +221,20 @@ def start(deadline):
         if simple.igihe_itangirwa == 1:
 
             deadlina = next_weekday(d, 3)
+            testing = datetime.datetime.now() 
+            print(testing)
             scheduler = BackgroundScheduler()
-            scheduler.add_job(mailweek, 'date', run_date=deadlina)
+            scheduler.add_job(mailweek, 'date', run_date=testing)
             for reports in reports_n:
                 for repo in report_n:
                     if repo.submitted_on > reports.deadline:
                         scheduler.add_job(dealine_week, 'date', run_date=repo.submitted_on )
                         scheduler.start()
             scheduler.start()
+            if deadlina:
+                deadlina = next_weekday(deadlina,3)
+
+                
 
         elif simple.igihe_itangirwa == 2:
             from calendar import monthrange
@@ -231,6 +242,9 @@ def start(deadline):
             days_in_month = lambda dt: monthrange(dt.year, dt.month)[1]
             today = date.today()
             therd_day = today.replace(day=3) + timedelta(days_in_month(today))
+            # therd_days = therd_day + timedelta(days_in_month(therd_day))
+            # print(therd_day)
+            # print(therd_days)
 
             scheduler = BackgroundScheduler()
             scheduler.add_job(mailmonth, 'date', run_date=therd_day)
@@ -240,7 +254,9 @@ def start(deadline):
                         scheduler.add_job(dealine_month, 'date', run_date=repo.submitted_on )
                         scheduler.start()
             scheduler.start()
-
+            if therd_day:
+                therd_day = therd_day + timedelta(days_in_month(therd_day))
+                
         elif simple.igihe_itangirwa == 3:
 
             deadlina = trimester_from_now()

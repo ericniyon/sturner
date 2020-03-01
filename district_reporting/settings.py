@@ -29,7 +29,7 @@ STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, 'static'),
 )
 
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -40,7 +40,7 @@ SECRET_KEY = '#afxel-ctw6qbzvr4g1#^uvty#f-v*b@x&_k-dze(6nv$3uo+v'
 DEBUG = True
 
 
-DEBUG = os.environ.get('DEBUG', False)
+# DEBUG = os.environ.get('DEBUG', False)
 ALLOWED_HOSTS = []
 
 
@@ -102,8 +102,12 @@ WSGI_APPLICATION = 'district_reporting.wsgi.application'
 
 DATABASES = {
 
-    'default': dj_database_url.config(default=config('DATABASE_URL')
-    )
+    # 'default': dj_database_url.config(default=config('DATABASE_URL')
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+    
 }
 
 

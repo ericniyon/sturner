@@ -20,7 +20,7 @@ day = datetime.datetime.now()
 
 
 
-class ReportType(models.Model):
+class AllReportType(models.Model):
     WEEK = 1
     MONTH = 2
     TERMESTER = 3
@@ -34,7 +34,7 @@ class ReportType(models.Model):
         (SEMESTER, 'Amezi atandatu'),
         (YEAR, 'Umwaka'),
     )
-    report_type = models.CharField(max_length=300)
+    types_of_report = models.CharField(max_length=300)
     igihe_itangirwa = models.PositiveSmallIntegerField(choices=TIME_CHOICES,help_text="eg: Icyumweru, Ukwezi etc..")
     owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
@@ -46,6 +46,8 @@ class ReportType(models.Model):
     def save(self,*args,**kwargs):
         if self.igihe_itangirwa == 1:
             self.deadline = weekly_deadline(day,4)
+            if self.deadline:
+                self.deadline = weekly_deadline(self.deadline,4)
 
         elif self.igihe_itangirwa == 2:
             monthly = lambda ded_lne:monthrange(ded_lne.year, ded_lne.month)[1]
@@ -61,20 +63,35 @@ class ReportType(models.Model):
             self.deadline = datetime.datetime.now() + datetime.timedelta((6*365/12) + 5)
         elif self.igihe_itangirwa == 5:
             self.deadline = datetime.datetime.now() + datetime.timedelta((12*365/12))
-        super(ReportType,self).save(*args,**kwargs)
+        super(AllReportType,self).save(*args,**kwargs)
 
 
 
     def __str__(self):
-        return self.report_type
+        return self.types_of_report
 
 
     
 
 
-class Report(models.Model):
-    report_type     = models.ForeignKey(ReportType, on_delete=models.CASCADE)
+class Reports(models.Model):
+    WEEK = 1
+    MONTH = 2
+    TERMESTER = 3
+    SEMESTER = 4
+    YEAR = 5
+
+    TIME_CHOICES = (
+        (WEEK, 'Icyumweru'),
+        (MONTH, 'Ukwezi'),
+        (TERMESTER, 'Igihembwe'),
+        (SEMESTER, 'Amezi atandatu'),
+        (YEAR, 'Umwaka'),
+    )
+
+    report_type     = models.ForeignKey(AllReportType, on_delete=models.CASCADE)
     report_file     = models.FileField(upload_to='reports')
+    time_to_report= models.PositiveIntegerField(choices=TIME_CHOICES)
     submitted_on   = models.DateTimeField(auto_now_add=True,blank=True, null=True)
 
 
